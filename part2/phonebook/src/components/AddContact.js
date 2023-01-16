@@ -13,27 +13,50 @@ const AddContact = (props) => {
   }
 
   const createContact = async (newContact) => {
-    let data = await contactService.create(newContact);
+    try {
+      let data = await contactService.create(newContact);
+      setPersons(persons.concat(data));
+    } catch {
 
-    setPersons(persons.concat(data));
+    }
   };
 
   const isNewNameUnique = () => {
     return persons.every((person) => person.name !== newName);
-  }
+  };
+
+  const asyncUpdateContact = async (contact) => {
+    try {
+      let id = contactService.findPersonId(newName, persons);
+      await contactService.update(id, contact);
+
+      let idx = contactService.findPersonIdx(id, persons);
+      let newPersons = [...persons];
+
+      newPersons[idx].number = newNumber;
+      setPersons(newPersons);
+    } catch {
+      console.log("Couldn't update contact");
+    }
+};
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (isNewNameUnique()) {
-      let newContact = {
-        name: newName,
-        number: newNumber,
-      };
+    let newContact = {
+      name: newName,
+      number: newNumber,
+    };
 
+    if (isNewNameUnique()) {
       createContact(newContact);
     } else {
-      alert(`${newName} is already added to phonebook`);
+      let msg = `${newName} is already added to phonebook, replace the old
+number with a new one?`
+
+      if (window.confirm(msg)) {
+        asyncUpdateContact(newContact);
+      }
     }
   }
 

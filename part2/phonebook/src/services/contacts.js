@@ -23,5 +23,32 @@ const deleteContact = async (id) => {
   await axios.delete(`${baseURL}/${id}`);
 };
 
-const exported = { getAll, create, update, deleteContact };
+const findPersonIdx = (id, persons) => {
+  for (let idx = 0; idx < persons.length; idx += 1) {
+    if (persons[idx].id === id) {
+      return idx;
+    }
+  }
+
+  return -1;
+};
+
+const findPersonId = (name, persons) => {
+  for (let idx = 0; idx < persons.length; idx +=1) {
+    if (persons[idx].name === name) {
+      return persons[idx].id;
+    }
+  }
+
+  return -1;
+}
+
+const exported = {
+  getAll,
+  create,
+  update,
+  deleteContact,
+  findPersonIdx,
+  findPersonId
+};
 export default exported;

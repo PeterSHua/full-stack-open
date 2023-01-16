@@ -23,8 +23,12 @@ const App = () => {
 
   const hook = () => {
     const allContacts = async () => {
-      let data = await contactService.getAll();
-      setPersons(data);
+      try {
+        let data = await contactService.getAll();
+        setPersons(data);
+      } catch {
+        console.log("Couldn't fetch all contacts");
+      }
     }
 
     allContacts();

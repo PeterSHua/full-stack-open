@@ -2,30 +2,20 @@ import ContactDetails from './ContactDetails';
 import contactService from '../services/contacts';
 
 const ContactList = ({ persons, setPersons }) => {
-  const findPersonIdx = (id) => {
-    for (let idx = 0; idx < persons.length; idx += 1) {
-      if (persons[idx].id === id) {
-        return idx;
-      }
-    }
-
-    return -1;
-  };
-
   const asyncDeleteContact = async (id) => {
-    let deleteIdx = findPersonIdx(id);
+    let deleteIdx = contactService.findPersonIdx(id, persons);
 
     if (window.confirm(`Delete ${persons[deleteIdx].name}?`)) {
-    // try {
-      await contactService.deleteContact(id);
+      try {
+        await contactService.deleteContact(id);
 
-      let newPersons = [...persons];
-      newPersons.splice(deleteIdx, 1);
+        let newPersons = [...persons];
+        newPersons.splice(deleteIdx, 1);
 
-      setPersons(newPersons);
-    // } catch {
-    //   alert('Failed to delete');
-    // }
+        setPersons(newPersons);
+      } catch {
+        alert('Failed to delete');
+      }
     }
   }
 
