@@ -51,8 +51,8 @@ const App = () => {
       </AddContact>
       <h2>Numbers</h2>
       <ContactList
-        persons={personsToDisplay(personsFilter, filteredPersons, persons)}>
-        setPersons={setPersons}
+        persons={personsToDisplay(personsFilter, filteredPersons, persons)}
+        setPersons={setPersons}>
       </ContactList>
     </div>
   )

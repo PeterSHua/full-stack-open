@@ -13,19 +13,20 @@ const ContactList = ({ persons, setPersons }) => {
   };
 
   const asyncDeleteContact = async (id) => {
+    let deleteIdx = findPersonIdx(id);
+
+    if (window.confirm(`Delete ${persons[deleteIdx].name}?`)) {
     // try {
       await contactService.deleteContact(id);
 
       let newPersons = [...persons];
-
-      let deleteIdx = findPersonIdx(id);
-
       newPersons.splice(deleteIdx, 1);
 
       setPersons(newPersons);
     // } catch {
     //   alert('Failed to delete');
     // }
+    }
   }
 
   const clickDeleteHandler = (event) => {
