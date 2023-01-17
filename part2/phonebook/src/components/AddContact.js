@@ -3,6 +3,7 @@ import contactService from '../services/contacts';
 const AddContact = (props) => {
   let { persons, setPersons } = props;
   let { newName, newNumber, setNewName, setNewNumber } = props;
+  let { setFlash, flashDuration } = props;
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -16,8 +17,30 @@ const AddContact = (props) => {
     try {
       let data = await contactService.create(newContact);
       setPersons(persons.concat(data));
-    } catch {
 
+      setFlash({
+        message: `Added ${newName}`,
+        type: 'success',
+      });
+
+      setTimeout(() => {
+        setFlash({
+          message: null,
+          type: null,
+        });
+      }, flashDuration);
+    } catch {
+      setFlash({
+        message: `Couldn't add ${newName}`,
+        type: 'error',
+      });
+
+      setTimeout(() => {
+        setFlash({
+          message: null,
+          type: null,
+        });
+      }, flashDuration);
     }
   };
 
@@ -35,8 +58,31 @@ const AddContact = (props) => {
 
       newPersons[idx].number = newNumber;
       setPersons(newPersons);
+
+      setFlash({
+        message: `Updated ${newName}`,
+        type: 'success',
+      });
+
+      setTimeout(() => {
+        setFlash({
+          message: null,
+          type: null,
+        });
+      }, flashDuration);
     } catch {
-      console.log("Couldn't update contact");
+      setFlash({
+        message: `Information of ${newName} has already been removed from
+server`,
+        type: 'error',
+      });
+
+      setTimeout(() => {
+        setFlash({
+          message: null,
+          type: null,
+        });
+      }, flashDuration);
     }
 };
 
