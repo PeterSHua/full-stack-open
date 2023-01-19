@@ -1,12 +1,11 @@
-# fly.toml file generated for twilight-flower-4992 on 2023-01-18T11:41:34-08:00
+# fly.toml file generated for delicate-violet-5663 on 2023-01-18T14:42:46-08:00
 
-app = "twilight-flower-4992"
+app = "delicate-violet-5663"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
 [env]
-  PORT = "8080"
 
 [experimental]
   auto_rollback = true
