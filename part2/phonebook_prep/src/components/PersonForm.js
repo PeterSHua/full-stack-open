@@ -1,3 +1,5 @@
+import personService from '../services/persons';
+
 let PersonForm = (props) => {
   let { newName, newNumber, persons } = props;
   let { setNewName, setNewNumber, setPersons } = props;
@@ -21,7 +23,25 @@ let PersonForm = (props) => {
     }
 
     if (!uniquePerson()) {
-      alert(`${newName} is already added to phonebook`);
+      let msg = `${newName} is already added to phonebook, replace the old number with a new one?`;
+
+      if (window.confirm(msg)) {
+        let id = personService.findPersonId(newName, persons);
+
+        personService
+          .update(id, { name: newName, number: newNumber })
+          .then((result) => {
+            let idx = personService.findPersonIdx(id, persons);
+            let copy = [...persons];
+
+            copy[idx].number = newNumber;
+            setPersons(copy);
+          })
+          .catch((error) => {
+            console.log("couldn't update");
+          });
+      }
+
       return;
     }
 
@@ -30,7 +50,13 @@ let PersonForm = (props) => {
       number: newNumber,
     };
 
-    setPersons(persons.concat(newPerson));
+    personService
+      .create(newPerson)
+      .then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName('');
+        setNewNumber('');
+      });
   };
 
   return (

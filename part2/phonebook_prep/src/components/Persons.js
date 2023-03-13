@@ -1,11 +1,18 @@
 import Person from './Person';
 
-let Persons = ({ persons }) => {
+let Persons = ({ personsToShow, persons, setPersons }) => {
   return (
     <div>
       <ul>
-        {persons.map(({ name, number }) => {
-          return <Person key={name} name={name} number={number} />;
+        {personsToShow.map(({ id, name, number }) => {
+          return <Person
+                   key={name}
+                   id={id}
+                   name={name}
+                   number={number}
+                   persons={persons}
+                   setPersons={setPersons}
+                  />;
         })}
       </ul>
     </div>

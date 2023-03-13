@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+
+import personService from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -14,6 +16,12 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+
+  useEffect(() => {
+    personService
+      .getAll()
+      .then((persons) => setPersons(persons));
+  }, []);
 
   let personsToShow;
   if (filter.length === 0) {
@@ -42,7 +50,10 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <Persons
+        personsToShow={personsToShow}
+        persons={persons}
+        setPersons={setPersons}/>
     </div>
   )
 }
