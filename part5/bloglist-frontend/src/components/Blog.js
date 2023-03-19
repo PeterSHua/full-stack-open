@@ -1,11 +1,8 @@
 import { useState, forwardRef, useImperativeHandle } from 'react';
-import blogService from '../services/blogs';
 
 const Blog = forwardRef(({
   blog,
-  blogIdx,
-  blogs,
-  setBlogs
+  updateBlog
 }, refs) => {
   const blogStyle = {
     paddingTop: 10,
@@ -15,7 +12,7 @@ const Blog = forwardRef(({
     marginBottom: 5
   };
 
-  const [detailsVisible, setDetailsVisible] = useState(false);
+  const [detailsVisible, setDetailsVisible] = useState('none');
 
   const hideWhenVisible = {
     display: detailsVisible ? 'none' : ''
@@ -39,14 +36,7 @@ const Blog = forwardRef(({
     let updatedBlog = { ...blog };
     updatedBlog.likes += 1;
 
-    blogService
-      .update(updatedBlog)
-      .then((returnedBlog) => {
-        let updatedBlogs = [...blogs];
-        returnedBlog.user = updatedBlog.user;
-        updatedBlogs[blogIdx] = returnedBlog;
-        setBlogs(updatedBlogs);
-      });
+    updateBlog(updatedBlog);
   };
 
   return (
