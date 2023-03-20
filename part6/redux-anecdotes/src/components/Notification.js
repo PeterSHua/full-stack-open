@@ -1,4 +1,12 @@
+import { useSelector } from 'react-redux'
+
 const Notification = () => {
+  const notification = useSelector((state) => state.notification);
+
+  if (notification === '') {
+    return;
+  }
+
   const style = {
     border: 'solid',
     padding: 10,
@@ -6,7 +14,7 @@ const Notification = () => {
   }
   return (
     <div style={style}>
-      render here notification...
+      {notification}
     </div>
   )
 }
