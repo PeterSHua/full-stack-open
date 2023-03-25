@@ -10,10 +10,12 @@ import {
 import DiaryEntries from "./components/DiaryEntries";
 import NewDiaryEntryForm from './components/NewDiaryEntryForm';
 import diaryService from './services/diaryService';
+import Notification from './components/Notification';
 
 const baseUrl = 'http://localhost:3001';
 
 const App = () => {
+  const [notification, setNotification] = useState('');
   const [newDiaryEntry, setNewDiaryEntry] = useState<NewEntry>({
     date: '',
     weather: Weather.Sunny,
@@ -47,9 +49,11 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={notification} />
       <NewDiaryEntryForm
         diaryEntries={diaryEntries}
         setDiaryEntries={setDiaryEntries}
+        setNotification={setNotification}
       />
       <DiaryEntries diaryEntries={diaryEntries} />
     </div>

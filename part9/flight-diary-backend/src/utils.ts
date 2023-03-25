@@ -1,4 +1,3 @@
-
 import { NewDiaryEntry, Weather, Visibility } from './types';
 
 const isString = (text: unknown): text is string => {
@@ -58,7 +57,7 @@ const toNewDiaryEntry = (object: unknown): NewDiaryEntry => {
       date: parseDate(object.date),
       comment: parseComment(object.comment)
     };
-  
+
     return newEntry;
   }
 

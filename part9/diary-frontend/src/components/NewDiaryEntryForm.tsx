@@ -1,33 +1,47 @@
 import { useState } from 'react';
 import diaryService from '../services/diaryService';
 
-import { Entry, NewEntry } from '../types';
+import { Entry, NewEntry, Visibility, Weather } from '../types';
 
 interface Props {
   diaryEntries: Entry[];
   setDiaryEntries: React.Dispatch<React.SetStateAction<Entry[]>>;
+  setNotification: React.Dispatch<React.SetStateAction<string>>;
 }
-const NewDiaryEntryForm = ({ diaryEntries, setDiaryEntries }: Props) => {
+const NewDiaryEntryForm = (
+  {
+    diaryEntries,
+    setDiaryEntries,
+    setNotification
+  }: Props
+) => {
   const [date, setDate] = useState('');
-  const [visibility, setVisibility] = useState('');
-  const [weather, setWeather] = useState('');
+  const [visibility, setVisibility] = useState(Visibility.Good);
+  const [weather, setWeather] = useState(Weather.Sunny);
   const [comment, setComment] = useState('');
 
-  const addEntry = (event: React.SyntheticEvent) => {
+  const addEntry = async (event: React.SyntheticEvent) => {
     event.preventDefault();
 
-    const newDiaryEntry = {
+    const newDiaryEntry: NewEntry = {
       date,
       visibility,
       weather,
       comment
     };
 
-    diaryService
-      .createEntry(newDiaryEntry as NewEntry)
-      .then((entry) => {
-        setDiaryEntries(diaryEntries.concat(entry));
-      });
+    const data = await diaryService.createEntry(newDiaryEntry);
+
+    if (data) {
+      if (typeof data === 'string') {
+        setNotification(data);
+        setTimeout(() => {
+          setNotification('');
+        }, 5000);
+      } else if ("id" in data && "date" in data && "weather" in data && "visibility" in data) {
+        setDiaryEntries(diaryEntries.concat(data));
+      }
+    }
   };
 
   return (
@@ -37,29 +51,74 @@ const NewDiaryEntryForm = ({ diaryEntries, setDiaryEntries }: Props) => {
         <div>
           date
           <input
-            type="text"
+            type="date"
             name="date"
             value={date}
             onChange={({ target }) => setDate(target.value)}
           />
         </div>
         <div>
-          visibility
-          <input
-            type="text"
-            name="visibility"
-            value={visibility}
-            onChange={({ target }) => setVisibility(target.value)}
-          />
+          visibility:
+          <span>
+            great
+            <input
+              type="radio"
+              name="visibility"
+              onChange={() => setVisibility(Visibility.Great)}
+            />
+            good
+            <input
+              type="radio"
+              name="visibility"
+              onChange={() => setVisibility(Visibility.Good)}
+            />
+            ok
+            <input
+              type="radio"
+              name="visibility"
+              onChange={() => setVisibility(Visibility.Ok)}
+            />
+            poor
+            <input
+              type="radio"
+              name="visibility"
+              onChange={() => setVisibility(Visibility.Poor)}
+            />
+          </span>
         </div>
         <div>
-          weather
-          <input
-            type="text"
-            name="weather"
-            value={weather}
-            onChange={({ target }) => setWeather(target.value)}
-          />
+          weather:
+          <span>
+            <input
+              type="radio"
+              name="weather"
+              onChange={() => setWeather(Weather.Sunny)}
+            />
+            rainy
+            <input
+              type="radio"
+              name="weather"
+              onChange={() => setWeather(Weather.Rainy)}
+            />
+            cloudy
+            <input
+              type="radio"
+              name="weather"
+              onChange={() => setWeather(Weather.Cloudy)}
+            />
+            stormy
+            <input
+              type="radio"
+              name="weather"
+              onChange={() => setWeather(Weather.Stormy)}
+            />
+            windy
+            <input
+              type="radio"
+              name="weather"
+              onChange={() => setWeather(Weather.Windy)}
+            />
+          </span>
         </div>
         <div>
           comment
