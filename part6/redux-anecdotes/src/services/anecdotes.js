@@ -16,11 +16,18 @@ const createNew = async (content) => {
   const response = await axios.post(baseUrl, object);
 
   return response.data;
-}
-
-// eslint-disable-next-line
-export default {
-  getAll,
-  createNew,
 };
 
+const update = async (object) => {
+  const response = await axios.put(`${baseUrl}/${object.id}`, object);
+
+  return response.data;
+};
+
+const anecdoteService = {
+  getAll,
+  createNew,
+  update,
+};
+
+export default anecdoteService;
