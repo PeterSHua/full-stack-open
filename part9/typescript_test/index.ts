@@ -3,6 +3,8 @@ import { parseArguments, bmiCalculator } from './bmiCalculator';
 
 const app = express();
 
+app.use(express.json());
+
 app.get('/ping', (_req, res) => {
   res.send('pong');
 });
@@ -38,6 +40,67 @@ app.get('/bmi', (req, res) => {
       res.send({ error: e.message });
     }
   }
+});
+
+app.post('/exercises', (req, res) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const {
+    daily_exercises,
+    target
+  }: {
+    daily_exercises: any,
+    target: any
+  } = req.body;
+
+
+  if (!daily_exercises || !target) {
+    return res.status(400).send({ error: 'parameters missing' });
+  }
+
+  if (!Array.isArray(daily_exercises) || isNaN(Number(target))) {
+    return res.status(400).send({ error: 'malformed parameters' });
+  }
+
+  const periodLength = daily_exercises.length;
+
+  const trainingDays = daily_exercises.reduce((total, curr) => {
+    if (curr == 0) {
+      return total;
+    }
+
+    return total += 1;
+  }, 0);
+
+  const sum = daily_exercises.reduce((total, curr) => {
+    return total += curr;
+  }, 0);
+
+  const average = sum / daily_exercises.length;
+
+  const success = average >= target;
+
+  let rating;
+  let ratingDescription;
+  if (average < target) {
+    rating = 1;
+    ratingDescription = 'do better';
+  } else if (average === target) {
+    rating = 2;
+    ratingDescription = 'good job';
+  } else {
+    rating = 3;
+    ratingDescription = 'amazing work';
+  }
+
+  return res.send({
+    periodLength,
+    trainingDays,
+    success,
+    rating,
+    ratingDescription,
+    target,
+    average,
+  });
 });
 
 const PORT = 3003;

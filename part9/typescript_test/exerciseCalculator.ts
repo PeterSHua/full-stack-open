@@ -7,12 +7,12 @@
     ratingDescription: string,
     target: number,
     average: number
-  };
+  }
 
   interface exerciseCalculatorInputs {
     target: number,
     training: number[],
-  };
+  }
 
   const parseArguments = (args: string[]): exerciseCalculatorInputs => {
     if (args.length < 4) {
@@ -28,10 +28,10 @@
     const training = [];
 
     for (let idx = 3; idx < process.argv.length; idx += 1) {
-      let hours = Number(process.argv[idx]);
+      const hours = Number(process.argv[idx]);
 
       if (isNaN(hours)) {
-        throw new Error(`training hour at position ${idx} isn\'nt a number!`);
+        throw new Error(`training hour at position ${idx} isn'nt a number!`);
       }
 
       training.push(hours);
@@ -88,7 +88,7 @@
 
   try {
     const { target, training } = parseArguments(process.argv);
-    let trainingLog = exerciseCalculator(training, target);
+    const trainingLog = exerciseCalculator(training, target);
     console.log(trainingLog);
   } catch (error: unknown) {
     let errorMessage = 'Something bad happened.';
